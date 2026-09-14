@@ -28,6 +28,6 @@ main ul li:last-child span {
 }
 
 main ul li:not(:last-child)::after {
-  content: " > ";
-  color: #333;         
+  content: ' > ';
+  color: #333;
 }
