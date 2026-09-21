@@ -60,7 +60,7 @@ export function groupStudentsBySubject(students) {
   return map;
 }
 
-export function getStudentsWithMaxAverageGrade(students) {
+export function getTopStudents(students) {
   if (students.length === 0) {
     return [];
   }

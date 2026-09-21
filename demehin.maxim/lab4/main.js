@@ -1,9 +1,5 @@
 import './model.js';
-import {
-  Student,
-  getUniqueSubjects,
-  getStudentsWithMaxAverageGrade,
-} from './model.js';
+import {Student, getUniqueSubjects, getTopStudents} from './model.js';
 
 const STORAGE_KEY = 'students';
 
@@ -157,7 +153,7 @@ document
 document
   .querySelector('.analytics-btn-top')
   .addEventListener('click', async () => {
-    const top = await asyncOp(() => getStudentsWithMaxAverageGrade(students));
+    const top = await asyncOp(() => getTopStudents(students));
     const text = top
       .map((s) => `${s.name} (${s.getAverageGrade().toFixed(2)})`)
       .join(', ');
