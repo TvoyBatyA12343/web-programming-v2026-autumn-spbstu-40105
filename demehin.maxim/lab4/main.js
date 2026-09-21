@@ -67,15 +67,13 @@ function render() {
       <button
         type="button"
         class="delete-button"
-        data-testid="delete-button"
-        data-action="delete"
-        aria-label="Удалить студента"
+        data-testid="delete-entity"
       >Удалить</button>
     `;
 
-    card.querySelector('.delete-button').addEventListener('click', () => {
-      deleteStudent(s.id);
-    });
+    card
+      .querySelector('[data-testid="delete-entity"]')
+      .addEventListener('click', () => deleteStudent(s.id));
 
     container.appendChild(card);
   }

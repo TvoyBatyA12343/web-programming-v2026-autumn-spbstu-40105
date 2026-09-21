@@ -34,7 +34,7 @@ button {
   line-height: 1.5;
 }
 
-.student-card .delete-button {
+.student-card [data-testid='delete-entity'] {
   margin-top: 8px;
 }
 

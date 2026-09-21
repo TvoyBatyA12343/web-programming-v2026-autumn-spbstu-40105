@@ -71,3 +71,8 @@ export function getStudentsWithMaxAverageGrade(students) {
 export function getStudentsBySubject(students, subject) {
   return students.filter((s) => subject in s.grades);
 }
+
+export const getTopStudents = getStudentsWithMaxAverageGrade;
+export const getAllSubjects = getUniqueSubjects;
+export const groupByAverage = groupStudentsByAverageGrade;
+export const groupBySubject = groupStudentsBySubject;
