@@ -1,5 +1,9 @@
 import './model.js';
-import {Student, getAllSubjects, getTopStudents} from './model.js';
+import {
+  Student,
+  getAllSubjects,
+  getStudentsWithMaxAverageGrade,
+} from './model.js';
 
 const STORAGE_KEY = 'students';
 
@@ -7,7 +11,9 @@ let students = loadFromStorage();
 
 function loadFromStorage() {
   const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
+  if (!raw) {
+    return [];
+  }
   try {
     const data = JSON.parse(raw);
     return data.map((s) => new Student(s.id, s.name, s.grades));
@@ -38,6 +44,7 @@ function render() {
   for (const s of students) {
     const card = document.createElement('div');
     card.className = 'student-card';
+    card.setAttribute('data-testid', 'entity-card');
     card.dataset.id = String(s.id);
 
     const subjects = Object.entries(s.grades)
@@ -45,13 +52,31 @@ function render() {
       .join(', ');
 
     card.innerHTML = `
-      <strong>ID:</strong> ${s.id}<br />
-      <strong>Имя:</strong> ${s.name}<br />
-      <strong>Средний балл:</strong> ${s.getAverageGrade().toFixed(2)}<br />
-      <strong>Предметы:</strong> ${subjects || 'нет оценок'}
+      <div><strong>ID:</strong> ${s.id}</div>
+      <div><strong>Имя:</strong> ${s.name}</div>
+      <div><strong>Средний балл:</strong> ${s.getAverageGrade().toFixed(2)}</div>
+      <div><strong>Предметы:</strong> ${subjects || 'нет оценок'}</div>
     `;
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.textContent = 'Удалить';
+    deleteBtn.setAttribute('data-testid', 'delete-button');
+    deleteBtn.addEventListener('click', () => {
+      deleteStudent(s.id);
+    });
+    card.appendChild(deleteBtn);
+
     container.appendChild(card);
   }
+}
+
+async function deleteStudent(id) {
+  await asyncOp(() => {
+    students = students.filter((s) => s.id !== id);
+    saveToStorage();
+  });
+  render();
 }
 
 document
@@ -99,22 +124,6 @@ document
   });
 
 document
-  .querySelector('[data-testid="delete-form"]')
-  .addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const id = Number(form.elements.id.value);
-
-    await asyncOp(() => {
-      students = students.filter((s) => s.id !== id);
-      saveToStorage();
-    });
-
-    form.reset();
-    render();
-  });
-
-document
   .querySelector('[data-testid="remove-grade-form"]')
   .addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -136,19 +145,25 @@ document
     render();
   });
 
-document.getElementById('show-subjects').addEventListener('click', async () => {
-  const subjects = await asyncOp(() => getAllSubjects(students));
-  document.getElementById('analytics').textContent =
-    'Все предметы: ' + (subjects.join(', ') || 'нет');
-});
+document
+  .querySelector('.analytics-btn-subjects')
+  .addEventListener('click', async () => {
+    const subjects = await asyncOp(() => getAllSubjects(students));
+    document.querySelector('.analytics').textContent = `Все предметы: ${
+      subjects.join(', ') || 'нет'
+    }`;
+  });
 
-document.getElementById('show-top').addEventListener('click', async () => {
-  const top = await asyncOp(() => getTopStudents(students));
-  document.getElementById('analytics').textContent =
-    'Лучшие: ' +
-    (top
+document
+  .querySelector('.analytics-btn-top')
+  .addEventListener('click', async () => {
+    const top = await asyncOp(() => getStudentsWithMaxAverageGrade(students));
+    const text = top
       .map((s) => `${s.name} (${s.getAverageGrade().toFixed(2)})`)
-      .join(', ') || 'нет');
-});
+      .join(', ');
+    document.querySelector('.analytics').textContent = `Лучшие: ${
+      text || 'нет'
+    }`;
+  });
 
 render();

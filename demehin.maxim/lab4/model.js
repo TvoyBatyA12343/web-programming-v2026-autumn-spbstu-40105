@@ -18,9 +18,7 @@ export class Student {
     if (values.length === 0) {
       return 0;
     }
-
-    const sum = values.reduce((acc, g) => acc + g, 0);
-    return sum / values.length;
+    return values.reduce((acc, g) => acc + g, 0) / values.length;
   }
 
   get summary() {
@@ -28,7 +26,7 @@ export class Student {
   }
 }
 
-export function groupByAverage(students) {
+export function groupStudentsByAverageGrade(students) {
   return students.reduce((acc, s) => {
     const key = s.getAverageGrade().toFixed(2);
     if (!acc[key]) {
@@ -49,7 +47,7 @@ export function getAllSubjects(students) {
   return [...set];
 }
 
-export function groupBySubject(students) {
+export function groupStudentsBySubject(students) {
   const map = new Map();
   for (const s of students) {
     for (const subject of Object.keys(s.grades)) {
@@ -59,15 +57,13 @@ export function groupBySubject(students) {
       map.get(subject).push(s);
     }
   }
-
   return map;
 }
 
-export function getTopStudents(students) {
+export function getStudentsWithMaxAverageGrade(students) {
   if (students.length === 0) {
     return [];
   }
-
   const max = Math.max(...students.map((s) => s.getAverageGrade()));
   return students.filter((s) => s.getAverageGrade() === max);
 }
@@ -75,3 +71,7 @@ export function getTopStudents(students) {
 export function getStudentsBySubject(students, subject) {
   return students.filter((s) => subject in s.grades);
 }
+
+export const groupByAverage = groupStudentsByAverageGrade;
+export const groupBySubject = groupStudentsBySubject;
+export const getTopStudents = getStudentsWithMaxAverageGrade;

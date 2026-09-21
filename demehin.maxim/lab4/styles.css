@@ -34,7 +34,11 @@ button {
   line-height: 1.5;
 }
 
-#analytics {
+.student-card button {
+  margin-top: 8px;
+}
+
+.analytics {
   margin-top: 12px;
   color: #333;
 }
