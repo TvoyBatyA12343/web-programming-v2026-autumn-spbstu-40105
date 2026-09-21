@@ -11,10 +11,7 @@ let students = loadFromStorage();
 
 function loadFromStorage() {
   const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    return [];
-  }
-
+  if (!raw) return [];
   try {
     const data = JSON.parse(raw);
     return data.map((s) => new Student(s.id, s.name, s.grades));
@@ -81,22 +78,7 @@ document.querySelector('[data-testid="entity-form"]')
     render();
   });
 
-  document.querySelector('[data-testid="delete-form"]')
-  .addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const id = Number(form.elements.id.value);
-
-    await asyncOp(() => {
-      students = students.filter((s) => s.id !== id);
-      saveToStorage();
-    });
-
-    form.reset();
-    render();
-  });
-
-  document.querySelector('[data-testid="grade-form"]')
+document.querySelector('[data-testid="grade-form"]')
   .addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -118,7 +100,22 @@ document.querySelector('[data-testid="entity-form"]')
     render();
   });
 
-  document.querySelector('[data-testid="remove-grade-form"]')
+document.querySelector('[data-testid="delete-form"]')
+  .addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const id = Number(form.elements.id.value);
+
+    await asyncOp(() => {
+      students = students.filter((s) => s.id !== id);
+      saveToStorage();
+    });
+
+    form.reset();
+    render();
+  });
+
+document.querySelector('[data-testid="remove-grade-form"]')
   .addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -138,3 +135,19 @@ document.querySelector('[data-testid="entity-form"]')
     form.reset();
     render();
   });
+
+document.getElementById('show-subjects').addEventListener('click', async () => {
+  const subjects = await asyncOp(() => getAllSubjects(students));
+  document.getElementById('analytics').textContent =
+    'Все предметы: ' + (subjects.join(', ') || 'нет');
+});
+
+document.getElementById('show-top').addEventListener('click', async () => {
+  const top = await asyncOp(() => getTopStudents(students));
+  document.getElementById('analytics').textContent =
+    'Лучшие: ' +
+    (top.map((s) => `${s.name} (${s.getAverageGrade().toFixed(2)})`).join(', ') ||
+      'нет');
+});
+
+render();
