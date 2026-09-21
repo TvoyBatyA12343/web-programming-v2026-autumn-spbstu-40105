@@ -95,3 +95,46 @@ document.querySelector('[data-testid="entity-form"]')
     form.reset();
     render();
   });
+
+  document.querySelector('[data-testid="grade-form"]')
+  .addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const id = Number(form.elements.id.value);
+    const subject = form.elements.subject.value.trim();
+    const grade = Number(form.elements.grade.value);
+
+    await asyncOp(() => {
+      const s = students.find((st) => st.id === id);
+      if (!s) {
+        alert('Студент не найден');
+        return;
+      }
+      s.addGrade(subject, grade);
+      saveToStorage();
+    });
+
+    form.reset();
+    render();
+  });
+
+  document.querySelector('[data-testid="remove-grade-form"]')
+  .addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const id = Number(form.elements.id.value);
+    const subject = form.elements.subject.value.trim();
+
+    await asyncOp(() => {
+      const s = students.find((st) => st.id === id);
+      if (!s) {
+        alert('Студент не найден');
+        return;
+      }
+      s.removeGrade(subject);
+      saveToStorage();
+    });
+
+    form.reset();
+    render();
+  });
