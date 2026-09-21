@@ -1,3 +1,62 @@
 import './model.js';
+import {
+  Student,
+  getAllSubjects,
+  getTopStudents,
+} from './model.js';
 
-// Реализуйте асинхронную логику UI и синхронизацию с localStorage.
+const STORAGE_KEY = 'students';
+
+let students = loadFromStorage();
+
+function loadFromStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const data = JSON.parse(raw);
+    return data.map((s) => new Student(s.id, s.name, s.grades));
+  } catch {
+    return [];
+  }
+}
+
+function saveToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+}
+
+function asyncOp(callback, delay = 300) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(callback()), delay);
+  });
+}
+
+function render() {
+  const container = document.querySelector('[data-testid="entity-list"]');
+  container.innerHTML = '';
+
+  if (students.length === 0) {
+    container.textContent = 'Нет студентов';
+    return;
+  }
+
+  for (const s of students) {
+    const card = document.createElement('div');
+    card.className = 'student-card';
+    card.dataset.id = String(s.id);
+
+    const subjects = Object.entries(s.grades)
+      .map(([subj, grade]) => `${subj}: ${grade}`)
+      .join(', ');
+
+    card.innerHTML = `
+      <strong>ID:</strong> ${s.id}<br />
+      <strong>Имя:</strong> ${s.name}<br />
+      <strong>Средний балл:</strong> ${s.getAverageGrade().toFixed(2)}<br />
+      <strong>Предметы:</strong> ${subjects || 'нет оценок'}
+    `;
+    container.appendChild(card);
+  }
+}
