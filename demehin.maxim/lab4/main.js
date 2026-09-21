@@ -60,3 +60,38 @@ function render() {
     container.appendChild(card);
   }
 }
+
+document.querySelector('[data-testid="entity-form"]')
+  .addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const id = Number(form.elements.id.value);
+    const name = form.elements.name.value.trim();
+
+    await asyncOp(() => {
+      if (students.some((s) => s.id === id)) {
+        alert('Студент с таким ID уже существует');
+        return;
+      }
+      students.push(new Student(id, name));
+      saveToStorage();
+    });
+
+    form.reset();
+    render();
+  });
+
+  document.querySelector('[data-testid="delete-form"]')
+  .addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const id = Number(form.elements.id.value);
+
+    await asyncOp(() => {
+      students = students.filter((s) => s.id !== id);
+      saveToStorage();
+    });
+
+    form.reset();
+    render();
+  });
