@@ -16,14 +16,14 @@ export class Student {
   getAverageGrade() {
     const values = Object.values(this.grades);
     if (values.length === 0) {
-        return 0;
+      return 0;
     }
 
     const sum = values.reduce((acc, g) => acc + g, 0);
     return sum / values.length;
   }
 
-    get summary() {
+  get summary() {
     return `Студент ${this.name} (id: ${this.id}) — средний балл: ${this.getAverageGrade().toFixed(2)}`;
   }
 }
@@ -32,7 +32,7 @@ export function groupByAverage(students) {
   return students.reduce((acc, s) => {
     const key = s.getAverageGrade().toFixed(2);
     if (!acc[key]) {
-        acc[key] = [];
+      acc[key] = [];
     }
     acc[key].push(s);
     return acc;
@@ -71,7 +71,6 @@ export function getTopStudents(students) {
   const max = Math.max(...students.map((s) => s.getAverageGrade()));
   return students.filter((s) => s.getAverageGrade() === max);
 }
-
 
 export function getStudentsBySubject(students, subject) {
   return students.filter((s) => subject in s.grades);

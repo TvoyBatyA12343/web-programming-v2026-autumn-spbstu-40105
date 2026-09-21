@@ -1,9 +1,5 @@
 import './model.js';
-import {
-  Student,
-  getAllSubjects,
-  getTopStudents,
-} from './model.js';
+import {Student, getAllSubjects, getTopStudents} from './model.js';
 
 const STORAGE_KEY = 'students';
 
@@ -58,7 +54,8 @@ function render() {
   }
 }
 
-document.querySelector('[data-testid="entity-form"]')
+document
+  .querySelector('[data-testid="entity-form"]')
   .addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -78,7 +75,8 @@ document.querySelector('[data-testid="entity-form"]')
     render();
   });
 
-document.querySelector('[data-testid="grade-form"]')
+document
+  .querySelector('[data-testid="grade-form"]')
   .addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -100,7 +98,8 @@ document.querySelector('[data-testid="grade-form"]')
     render();
   });
 
-document.querySelector('[data-testid="delete-form"]')
+document
+  .querySelector('[data-testid="delete-form"]')
   .addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -115,7 +114,8 @@ document.querySelector('[data-testid="delete-form"]')
     render();
   });
 
-document.querySelector('[data-testid="remove-grade-form"]')
+document
+  .querySelector('[data-testid="remove-grade-form"]')
   .addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -146,8 +146,9 @@ document.getElementById('show-top').addEventListener('click', async () => {
   const top = await asyncOp(() => getTopStudents(students));
   document.getElementById('analytics').textContent =
     'Лучшие: ' +
-    (top.map((s) => `${s.name} (${s.getAverageGrade().toFixed(2)})`).join(', ') ||
-      'нет');
+    (top
+      .map((s) => `${s.name} (${s.getAverageGrade().toFixed(2)})`)
+      .join(', ') || 'нет');
 });
 
 render();
