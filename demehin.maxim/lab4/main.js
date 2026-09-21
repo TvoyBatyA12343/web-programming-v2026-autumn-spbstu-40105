@@ -32,6 +32,14 @@ function asyncOp(callback, delay = 300) {
   });
 }
 
+async function deleteStudent(id) {
+  await asyncOp(() => {
+    students = students.filter((s) => s.id !== id);
+    saveToStorage();
+  });
+  render();
+}
+
 function render() {
   const container = document.querySelector('[data-testid="entity-list"]');
   container.innerHTML = '';
@@ -56,27 +64,21 @@ function render() {
       <div><strong>Имя:</strong> ${s.name}</div>
       <div><strong>Средний балл:</strong> ${s.getAverageGrade().toFixed(2)}</div>
       <div><strong>Предметы:</strong> ${subjects || 'нет оценок'}</div>
+      <button
+        type="button"
+        class="delete-button entity-delete"
+        data-testid="entity-delete"
+        data-action="delete"
+        aria-label="Удалить студента"
+      >Удалить</button>
     `;
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.type = 'button';
-    deleteBtn.textContent = 'Удалить';
-    deleteBtn.setAttribute('data-testid', 'delete-button');
-    deleteBtn.addEventListener('click', () => {
+    card.querySelector('.delete-button').addEventListener('click', () => {
       deleteStudent(s.id);
     });
-    card.appendChild(deleteBtn);
 
     container.appendChild(card);
   }
-}
-
-async function deleteStudent(id) {
-  await asyncOp(() => {
-    students = students.filter((s) => s.id !== id);
-    saveToStorage();
-  });
-  render();
 }
 
 document
