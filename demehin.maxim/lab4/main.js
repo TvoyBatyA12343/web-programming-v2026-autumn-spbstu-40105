@@ -1,7 +1,7 @@
 import './model.js';
 import {
   Student,
-  getAllSubjects,
+  getUniqueSubjects,
   getStudentsWithMaxAverageGrade,
 } from './model.js';
 
@@ -66,8 +66,8 @@ function render() {
       <div><strong>Предметы:</strong> ${subjects || 'нет оценок'}</div>
       <button
         type="button"
-        class="delete-button entity-delete"
-        data-testid="entity-delete"
+        class="delete-button"
+        data-testid="delete-button"
         data-action="delete"
         aria-label="Удалить студента"
       >Удалить</button>
@@ -150,7 +150,7 @@ document
 document
   .querySelector('.analytics-btn-subjects')
   .addEventListener('click', async () => {
-    const subjects = await asyncOp(() => getAllSubjects(students));
+    const subjects = await asyncOp(() => getUniqueSubjects(students));
     document.querySelector('.analytics').textContent = `Все предметы: ${
       subjects.join(', ') || 'нет'
     }`;

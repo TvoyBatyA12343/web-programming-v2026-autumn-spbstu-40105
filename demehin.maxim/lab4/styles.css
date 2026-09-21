@@ -34,7 +34,7 @@ button {
   line-height: 1.5;
 }
 
-.student-card button {
+.student-card .delete-button {
   margin-top: 8px;
 }
 

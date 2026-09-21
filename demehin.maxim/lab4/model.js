@@ -26,6 +26,16 @@ export class Student {
   }
 }
 
+export function getUniqueSubjects(students) {
+  const set = new Set();
+  for (const s of students) {
+    for (const subject of Object.keys(s.grades)) {
+      set.add(subject);
+    }
+  }
+  return [...set];
+}
+
 export function groupStudentsByAverageGrade(students) {
   return students.reduce((acc, s) => {
     const key = s.getAverageGrade().toFixed(2);
@@ -35,16 +45,6 @@ export function groupStudentsByAverageGrade(students) {
     acc[key].push(s);
     return acc;
   }, {});
-}
-
-export function getAllSubjects(students) {
-  const set = new Set();
-  for (const s of students) {
-    for (const subject of Object.keys(s.grades)) {
-      set.add(subject);
-    }
-  }
-  return [...set];
 }
 
 export function groupStudentsBySubject(students) {
@@ -71,7 +71,3 @@ export function getStudentsWithMaxAverageGrade(students) {
 export function getStudentsBySubject(students, subject) {
   return students.filter((s) => subject in s.grades);
 }
-
-export const groupByAverage = groupStudentsByAverageGrade;
-export const groupBySubject = groupStudentsBySubject;
-export const getTopStudents = getStudentsWithMaxAverageGrade;
