@@ -79,9 +79,6 @@ const BASE_BOOKS = [
   },
 ];
 
-// 27 книг → 3 страницы по 9 книг.
-// «Страниц может быть 20» — пагинация это выдержит,
-// потому что номера строятся динамически.
 const BOOKS = Array.from({ length: 27 }, (_, i) => {
   const base = BASE_BOOKS[i % BASE_BOOKS.length];
   return { ...base, id: i + 1 };
